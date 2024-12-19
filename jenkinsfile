@@ -1,0 +1,46 @@
+pipeline {
+    agent any  // This means it can run on any available agent
+    
+    environment {
+        MY_ENV_VAR = "Hello, Jenkins!"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Checking out the code'
+                checkout scm  // Checks out the code from the repository
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                echo 'Building the project'
+                sh './build.sh'  // Runs a shell script for building the project
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests'
+                sh './run_tests.sh'  // Runs a test script
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application'
+                sh './deploy.sh'  // Deploy the project
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
